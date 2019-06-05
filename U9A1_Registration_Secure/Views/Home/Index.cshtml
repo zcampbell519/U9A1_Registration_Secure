@@ -1,0 +1,49 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+}
+
+@model U9A1_Registration_Secure.Models.RegistrationModel
+<h2>Registration</h2>
+@using (Html.BeginForm("Index", "Home", FormMethod.Post))
+{
+    <hr />
+    <div id="UserIdBox">
+        <label>User ID:</label>
+        @Html.TextBox("UserIdText", null, new { width = "300px" })
+    </div>
+
+    <p />
+    <div id="availableCourses">
+        <label>Courses: </label>
+        @Html.DropDownList("CourseListItems", Model.CourseListItems, "Select a course...",
+            new { onchange = "SelectedCourseChanged()", width = "250px" })
+        @Html.Hidden("SelectedCourseNumber")
+    </div>
+    @Html.Label("UserMessage",Model.UserMessage)
+    <div id="SelectedCoursesList">
+        <b>Selected Courses:</b>
+        <br/>
+        <ul>
+            @foreach(var rc in Model.RegisteredCourses.ToList())
+            {
+                <li>@rc.CourseNumber</li>
+            }
+        </ul>
+        <p>
+            Total Credits: @(Model.TotalCredits.ToString())
+        </p>
+        @if (Model.RegisteredCourses.Count() > 0)
+        {
+            @Html.ActionLink("Delete All Selected Courses", "DeleteAll");
+        }
+    </div>
+}
+
+<script>
+    function SelectedCourseChanged() {
+        document.getElementById("SelectedCourseNumber").value =
+            document.getElementById("CourseListItems")[document.getElementById("CourseListItems").selectedIndex].value;
+        console.log(document.getElementById("SelectedCourseNumber").value);
+        document.forms[0].submit();
+    }
+</script>
